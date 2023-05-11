@@ -1,0 +1,7 @@
+<label for="nickname">Beceneved:</label>
+<input type="text" name="nickname" [(ngModel)]="nickname">
+<app-create-room [nickname]="nickname"></app-create-room>
+<app-join-room [nickname]="nickname"></app-join-room>
+<ul class="errors">
+    <li *ngFor="let error of errors">{{error}}</li>
+</ul>

@@ -1,0 +1,5 @@
+<div>
+    <label for="room">Szoba id-je</label>
+    <input type="text" name="room" id="room" [(ngModel)]="room">
+    <button (click)="socketioService.joinRoom(nickname, room)">Csatlakozás szobához</button>
+</div>

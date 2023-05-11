@@ -1,0 +1,109 @@
+table {
+    --tile-border: rgb(185, 185, 185);
+    background-color: rgb(85, 47, 33);
+    border-spacing: 4px;
+    border-radius: .3rem;
+    padding: .5rem;
+
+    tr {
+        td {
+            width: 60px;
+            height: 60px;
+            box-sizing: border-box;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            // background-color: rgb(119, 207, 119);
+            border-radius: .3rem;
+            outline: rgb(138, 84, 2) 1px solid;
+            position: relative;
+
+            .pokemon {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                // background-color: white;
+                border-radius: 50%;
+                z-index: 10;
+
+                img {
+                    position: absolute;
+                    transform: translate(-50%, -50%);
+                    top: 50%;
+                    left: 50%;
+                    width: 50px;
+                    height: 50px;
+
+                }
+            }
+
+            .north,
+            .east,
+            .south,
+            .west,
+            .mid {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                box-sizing: border-box;
+                top: 0;
+            }
+
+            .north,
+            .south {
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--tile-border);
+            }
+
+            .east,
+            .west {
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: var(--tile-border);
+            }
+
+            .south {
+                top: 40px;
+            }
+
+            .east {
+                right: 0 !important;
+            }
+
+            .mid {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: var(--tile-border);
+
+                &.midNorth {
+                    outline: red;
+                }
+            }
+
+
+        }
+    }
+}
+
+.choosePokemon{
+    .content{
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        .choosablePokemon{
+            border-radius: .2rem;
+            background-color: rgb(226, 226, 226);
+            padding: .5rem;
+            &:hover{
+                background-color: rgb(201, 201, 201);
+                cursor: pointer;
+            }
+        }
+    }
+    
+}

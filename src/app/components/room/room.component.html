@@ -1,0 +1,61 @@
+<div>
+    <h1>Üdvözöllek</h1>
+    <p>Ennek a szobának az id-je:</p>
+    <code>
+        {{room}}
+    </code>
+    <p>Oszdd meg barátaiddal, hogy csatlakozhassanak a játékhoz.</p>
+</div>
+<div>
+    <h2>Játékosok</h2>
+    <ul>
+        <li *ngFor="let player of players">{{player.id}}, {{player.nickname}}, {{player.roomCreator ? "👑" : ""}},
+            {{player.chosenPokemon}}</li>
+    </ul>
+    <button *ngIf="thisPlayer?.roomCreator" (click)="socketioService.startGame( room ? room : '' ) ">Indítás </button>
+</div>
+<div>
+    <table *ngIf="gotThePokemons" class="labirinth">
+        <tr *ngFor="let row of labirinth; let i = index">
+            <!-- <td *ngFor="let field of row; let j=index"
+                [class]="{north: field.north, east: field.east, south: field.south, west: field.west}">                
+                <img *ngIf="field.pokemon !== ''" [attr.src]="'./assets/img/'+field.pokemon+'.png'" alt="" width="50px" height="50px">
+            </td> -->
+            <td *ngFor="let field of row; let j = index">
+                <div *ngIf="field.north" class="north"></div>
+                <div *ngIf="field.east" class="east"></div>
+                <div *ngIf="field.south" class="south"></div>
+                <div *ngIf="field.west" class="west"></div>
+                <!-- <div class="mid"></div> -->
+                <div class="mid"
+                    [class]="{midNorth: field.north, midEast: field.east, midSouth: field.south, midWest: field.west}">
+                </div>
+
+                <div *ngIf="field.pokemon !== ''" class="pokemon">
+                    <img [attr.src]="'./assets/img/'+field.pokemon+'.png'" alt="">
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="choosePokemon" *ngIf="choosablePokemons.length > 0">
+        <h1>Válassz egy pokemont</h1>
+        <div class="content">
+            <div class="choosablePokemon" *ngFor="let choosablePokemon of choosablePokemons">
+                <img [attr.src]="'./assets/img/'+choosablePokemon+'.png'" (click)="choosePokemon(choosablePokemon)">
+            </div>
+        </div>
+    </div>
+    <div class="decks">
+        <div class="collected">
+            <div class="card" *ngFor="let pokemon of collectedPokemons">
+                <img [attr.src]="'./assets/img/'+pokemon+'.png'">
+            </div>
+        </div>
+        <div class="collectables">
+            <div class="card" *ngFor="let pokemon of collectablePokemons; index as pokemonIndex">
+                <img *ngIf="pokemonIndex == 0" [attr.src]="'./assets/img/'+pokemon+'.png'">
+                <img *ngIf="pokemonIndex != 0" [attr.src]="'./assets/img/pokeball.png'">
+            </div>
+        </div>
+    </div>
+</div>

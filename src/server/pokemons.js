@@ -1,0 +1,32 @@
+const pokemons = [
+    "pikachu",
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "caterpie",
+    "weedle",
+    "pidgey",
+    "rattata",
+    "spearow",
+    "ekans",
+    "sandshrew",
+    "nidoran-f",
+    "vulpix",
+    "zubat",
+    "oddish",
+    "venonat",
+    "diglett",
+    "psyduck",
+    "mankey",
+    "growlithe",
+    "poliwag",
+    "abra",
+    "machop",
+    "bellsprout",
+    "tentacool",
+    "geodude",
+    "ponyta",
+    "eevee"
+];
+
+exports.pokemons = pokemons

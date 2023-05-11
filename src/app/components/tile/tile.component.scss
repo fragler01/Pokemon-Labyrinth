@@ -1,0 +1,23 @@
+.tile{
+    position: relative;
+    width: 33.33%;
+    height: 33.33%;
+    background-color: rgb(51, 83, 0);
+    .north, .west, .east, .south{
+        width: 33.33%;
+        height: 33.33%;
+        position: absolute;
+    }
+    .north, .south {
+        border-left: 2px black solid;
+        border-right: 2px black solid;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .west, .east {
+        border-top: 2px black solid;
+        border-bottom: 2px black solid;
+        top: 50%;
+        transform: translateY(-50%);        
+    }
+}
