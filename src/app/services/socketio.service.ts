@@ -18,6 +18,12 @@ export class SocketioService {
     this.socket = io(environment.SOCKET_ENDPOINT)
   }
 
+  test(){
+    this.socket.on('test', (testMessage: string)=>{
+      console.log(testMessage)
+    })
+  }
+
   getMessage() {
     return new Observable((observer: Observer<any>) => {
       this.socket.on('heartbeat', (message: string) => {
@@ -112,6 +118,37 @@ export class SocketioService {
       })
     })
   }
+  getWhosTurn(){
+    return new Observable((observer: Observer<string>) => {
+      this.socket.on('whos turn', (playerid: string) => {
+        observer.next(playerid)
+      })
+    })
+  }
+
+  getGamePhase(){
+    return new Observable((observer: Observer<string>) => {
+      this.socket.on('new phase', (phase: string) => {
+        observer.next(phase)
+      })
+    })
+  }
+
+  getAvailableMoves(){
+    return new Observable((observer: Observer<{up: boolean, right: boolean, down: boolean, left: boolean}>) => {
+      this.socket.on('available moves', (availableMoves: {up: boolean, right: boolean, down: boolean, left: boolean}) => {
+        observer.next(availableMoves)
+      })
+    })
+  }
+
+  getCatch(){
+    return new Observable((observer: Observer<any>) => {
+      this.socket.on('catch', (test:any) => {
+        observer.next(test)
+      })
+    })
+  }
 
   public createRoom(nickname: string) {
     this.socket.emit('createRoom', nickname)
@@ -131,6 +168,36 @@ export class SocketioService {
 
   choosePokemon(pokemon: string){
     this.socket.emit('i choose you', pokemon)
+  }
+
+  moveColumnDown(column: number){
+    this.socket.emit('moveColumnDown', column)
+  }
+  moveColumnUp(column: number){
+    this.socket.emit('moveColumnUp', column)
+  }
+  moveRowRight(row: number){
+    this.socket.emit('moveRowRight', row)
+  }
+  moveRowLeft(row: number){
+    this.socket.emit('moveRowLeft', row)
+  }
+
+  moveCharacter(direction: string){
+    this.socket.emit('move character', direction)
+  }
+
+  rotateExtraTile(direction : string){
+    this.socket.emit('rotate extra tile', direction)
+  }
+
+  endTurn(){
+    this.socket.emit('end turn')
+  }
+
+  catchPokemon(){
+    this.socket.emit('catch pokemon')
+    this.endTurn()
   }
 
 

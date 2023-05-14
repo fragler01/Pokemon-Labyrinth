@@ -9,10 +9,18 @@
 <div>
     <h2>Játékosok</h2>
     <ul>
-        <li *ngFor="let player of players">{{player.id}}, {{player.nickname}}, {{player.roomCreator ? "👑" : ""}},
+        <li *ngFor="let player of players"
+            [class.bold]="player.id === whosTurn">{{player.id}}, {{player.nickname}}, {{player.roomCreator ? "👑" : ""}},
             {{player.chosenPokemon}}</li>
     </ul>
-    <button *ngIf="thisPlayer?.roomCreator" (click)="socketioService.startGame( room ? room : '' ) ">Indítás </button>
+    <button *ngIf="thisPlayer?.roomCreator && gameState === 'lobby'" (click)="socketioService.startGame( room ? room : '' ) ">Indítás </button>
+    <button *ngIf="mayIMoveMyCharacter()" (click)="socketioService.endTurn()">🛑</button>
+    <button *ngIf="mayIMoveTheTiles()" (click)="socketioService.rotateExtraTile('CCW')">↪️</button>
+    <button *ngIf="mayIMoveTheTiles()" (click)="socketioService.rotateExtraTile('CW')">↩️</button>
+    <button *ngIf="mayIMoveMyCharacter() && availableMoves.down" (click)="socketioService.moveCharacter('down')">Karakter 👇</button>
+    <button *ngIf="mayIMoveMyCharacter() && availableMoves.up" (click)="socketioService.moveCharacter('up')">Karakter 👆</button>
+    <button *ngIf="mayIMoveMyCharacter() && availableMoves.left" (click)="socketioService.moveCharacter('left')">Karakter 👈</button>
+    <button *ngIf="mayIMoveMyCharacter() && availableMoves.right" (click)="socketioService.moveCharacter('right')">Karakter 👉</button>
 </div>
 <div>
     <table *ngIf="gotThePokemons" class="labirinth">
@@ -21,23 +29,32 @@
                 [class]="{north: field.north, east: field.east, south: field.south, west: field.west}">                
                 <img *ngIf="field.pokemon !== ''" [attr.src]="'./assets/img/'+field.pokemon+'.png'" alt="" width="50px" height="50px">
             </td> -->
-            <td *ngFor="let field of row; let j = index">
-                <div *ngIf="field.north" class="north"></div>
-                <div *ngIf="field.east" class="east"></div>
-                <div *ngIf="field.south" class="south"></div>
-                <div *ngIf="field.west" class="west"></div>
+            <td *ngFor="let field of row; let j = index" [class]="{myCharacter : field?.pokemons.includes(myPokemon), playerCharacter : isPlayerOnThisTile(field)}">                
+                <button *ngIf="mayIMoveTheTiles() && !field && i === 0 && (j === 2 || j === 4 || j === 6) "
+                    (click)="socketioService.moveColumnDown(j) ">👇</button>
+                <button *ngIf="mayIMoveTheTiles() && !field && i === labirinth.length-1 && (j === 2 || j === 4 || j === 6)"
+                    (click)="socketioService.moveColumnUp(j) ">👆</button>
+                <button *ngIf="mayIMoveTheTiles() && !field && j === 0 && (i === 2 || i === 4 || i === 6)"
+                    (click)="socketioService.moveRowRight(i) ">👉</button>
+                <button *ngIf="mayIMoveTheTiles() && !field && j === labirinth.length-1 && (i === 2 || i === 4 || i === 6)"
+                    (click)="socketioService.moveRowLeft(i) ">👈</button>                    
+
+                <div *ngIf="field?.north" class="north"></div>
+                <div *ngIf="field?.east" class="east"></div>
+                <div *ngIf="field?.south" class="south"></div>
+                <div *ngIf="field?.west" class="west"></div>
                 <!-- <div class="mid"></div> -->
-                <div class="mid"
-                    [class]="{midNorth: field.north, midEast: field.east, midSouth: field.south, midWest: field.west}">
+                <div *ngIf="field?.clickable === undefined" class="mid"
+                    [class]="{midNorth: field?.north, midEast: field?.east, midSouth: field?.south, midWest: field?.west}">
                 </div>
 
-                <div *ngIf="field.pokemon !== ''" class="pokemon">
-                    <img [attr.src]="'./assets/img/'+field.pokemon+'.png'" alt="">
+                <div *ngIf="field?.clickable === undefined && field?.pokemons.length > 0" class="pokemon">
+                    <img *ngFor="let pokemon of field.pokemons" [attr.src]="'./assets/img/'+pokemon+'.png'" alt="">
                 </div>
             </td>
         </tr>
     </table>
-    <div class="choosePokemon" *ngIf="choosablePokemons.length > 0">
+    <div class="choosePokemon" *ngIf="choosablePokemons.length > 0" >
         <h1>Válassz egy pokemont</h1>
         <div class="content">
             <div class="choosablePokemon" *ngFor="let choosablePokemon of choosablePokemons">
@@ -45,6 +62,7 @@
             </div>
         </div>
     </div>
+
     <div class="decks">
         <div class="collected">
             <div class="card" *ngFor="let pokemon of collectedPokemons">

@@ -6,6 +6,8 @@ table {
     padding: .5rem;
 
     tr {
+        min-width: 60px;
+        min-height: 60px;
         td {
             width: 60px;
             height: 60px;
@@ -106,4 +108,14 @@ table {
         }
     }
     
+}
+
+.bold{
+    font-weight: 900;
+}
+.playerCharacter{
+    outline-color: red !important;
+}
+.myCharacter{
+    outline-color: cyan !important;
 }

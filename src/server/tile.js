@@ -6,7 +6,7 @@ class Tile {
     south = true
     west = true
 
-    pokemon = ''
+    pokemons = []
     starterField = false
 
     constructor(){
