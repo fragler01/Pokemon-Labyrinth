@@ -3,9 +3,9 @@ const { pokemons } = require('./pokemons.js')
 class Labirinth {
     labirinth = [];
     tiles = [];
-    extraTilePosition = {row: 0, column: 0};
+    extraTilePosition = { row: 0, column: 0 };
     choosablePokemons = pokemons.filter((pokemon, index) => index < 4)
-    collactablePokemons = pokemons.filter((pokemon, index) => index >= 4)    
+    collactablePokemons = pokemons.filter((pokemon, index) => index >= 4)
 
     constructor() {
         for (let i = 0; i < 9; i++) {
@@ -16,7 +16,7 @@ class Labirinth {
         }
         this.initTiles()
         this.initStartingFields()
-        this.initFixPokemonFields()        
+        this.initFixPokemonFields()
         this.drawLabirinth()
 
     }
@@ -29,7 +29,7 @@ class Labirinth {
             if (i < 6) { this.tiles[i].pokemons.push("1") }
             if (i >= 6 && i < 10) { this.tiles[i].starterField = true }
             if (i >= 20 && i < 32) { this.tiles[i].east = false, this.tiles[i].west = false }
-            if (i >= 32) { this.tiles[i].south = false, this.tiles[i].pokemons.push("1")}
+            if (i >= 32) { this.tiles[i].south = false, this.tiles[i].pokemons.push("1") }
         }
     }
 
@@ -59,31 +59,31 @@ class Labirinth {
         let pokemonIndex = 4
         for (let i = 0; i < 7; i++) {
             for (let j = 0; j < 7; j++) {
-                if ((i === 0 && j % 2 === 0 && this.labirinth[i+1][j+1] === null) || (i == 2 && j == 4)) {
-                    this.labirinth[i+1][j+1] = this.tiles[fixTileIndex]
-                    this.labirinth[i+1][j+1].pokemons = []
-                    this.labirinth[i+1][j+1].pokemons.push(pokemons[pokemonIndex])
-                    this.labirinth[i+1][j+1].rotate180()
+                if ((i === 0 && j % 2 === 0 && this.labirinth[i + 1][j + 1] === null) || (i == 2 && j == 4)) {
+                    this.labirinth[i + 1][j + 1] = this.tiles[fixTileIndex]
+                    this.labirinth[i + 1][j + 1].pokemons = []
+                    this.labirinth[i + 1][j + 1].pokemons.push(pokemons[pokemonIndex])
+                    this.labirinth[i + 1][j + 1].rotate180()
                     this.tiles = this.tiles.filter((tile, index) => index != fixTileIndex)
                     pokemonIndex++
-                } else if ((j === 0 && i % 2 === 0 && this.labirinth[i+1][j+1] === null) || (i == 2 && j == 2)) {
-                    this.labirinth[i+1][j+1] = this.tiles[fixTileIndex]
-                    this.labirinth[i+1][j+1].pokemons = []
-                    this.labirinth[i+1][j+1].pokemons.push(pokemons[pokemonIndex])
-                    this.labirinth[i+1][j+1].rotateCW()
+                } else if ((j === 0 && i % 2 === 0 && this.labirinth[i + 1][j + 1] === null) || (i == 2 && j == 2)) {
+                    this.labirinth[i + 1][j + 1] = this.tiles[fixTileIndex]
+                    this.labirinth[i + 1][j + 1].pokemons = []
+                    this.labirinth[i + 1][j + 1].pokemons.push(pokemons[pokemonIndex])
+                    this.labirinth[i + 1][j + 1].rotateCW()
                     this.tiles = this.tiles.filter((tile, index) => index != fixTileIndex)
                     pokemonIndex++
-                } else if ((j === 6 && i % 2 === 0 && this.labirinth[i+1][j+1] === null) || (i == 4 && j == 4)) {
-                    this.labirinth[i+1][j+1] = this.tiles[fixTileIndex]
-                    this.labirinth[i+1][j+1].pokemons = []
-                    this.labirinth[i+1][j+1].pokemons.push(pokemons[pokemonIndex])
-                    this.labirinth[i+1][j+1].rotateCCW()
+                } else if ((j === 6 && i % 2 === 0 && this.labirinth[i + 1][j + 1] === null) || (i == 4 && j == 4)) {
+                    this.labirinth[i + 1][j + 1] = this.tiles[fixTileIndex]
+                    this.labirinth[i + 1][j + 1].pokemons = []
+                    this.labirinth[i + 1][j + 1].pokemons.push(pokemons[pokemonIndex])
+                    this.labirinth[i + 1][j + 1].rotateCCW()
                     this.tiles = this.tiles.filter((tile, index) => index != fixTileIndex)
                     pokemonIndex++
-                } else if ((i === 6 && j % 2 === 0 && this.labirinth[i+1][j+1] === null) || (i == 4 && j == 2)) {
-                    this.labirinth[i+1][j+1] = this.tiles[fixTileIndex]
-                    this.labirinth[i+1][j+1].pokemons = []
-                    this.labirinth[i+1][j+1].pokemons.push(pokemons[pokemonIndex])
+                } else if ((i === 6 && j % 2 === 0 && this.labirinth[i + 1][j + 1] === null) || (i == 4 && j == 2)) {
+                    this.labirinth[i + 1][j + 1] = this.tiles[fixTileIndex]
+                    this.labirinth[i + 1][j + 1].pokemons = []
+                    this.labirinth[i + 1][j + 1].pokemons.push(pokemons[pokemonIndex])
                     this.tiles = this.tiles.filter((tile, index) => index != fixTileIndex)
                     pokemonIndex++
                 }
@@ -193,9 +193,9 @@ class Labirinth {
 
     generateMap() {
         console.log("[Generate Map]")
-        for (let i = 1; i < this.labirinth.length-1; i++) {
+        for (let i = 1; i < this.labirinth.length - 1; i++) {
             const row = this.labirinth[i];
-            for (let j = 1; j < row.length-1; j++) {
+            for (let j = 1; j < row.length - 1; j++) {
                 const column = row[j];
                 if (!column) {
                     this.labirinth[i][j] = this.randomTile()
@@ -206,10 +206,10 @@ class Labirinth {
 
         }
         // initMovableRowsAndColumns()
-        this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = this.tiles[0]        
+        this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = this.tiles[0]
         this.drawLabirinth()
 
- 
+
     }
     randomTile() {
         let randomNumber = Math.floor(Math.random() * this.tiles.length)
@@ -221,21 +221,21 @@ class Labirinth {
         let extraTile = this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column]
         //kiuritjuk az extra mezo elozoleg elfoglalt helyet
         this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = null
-        for (let i = this.labirinth.length-2; i > 0; i--) {
+        for (let i = this.labirinth.length - 2; i > 0; i--) {
             const row = this.labirinth[i]
-            for (let j = 0; j < columnIndex+1; j++) {
+            for (let j = 0; j < columnIndex + 1; j++) {
                 const field = row[j];
-                if(j === columnIndex){
+                if (j === columnIndex) {
                     //az utolso elotti mezot lemozgatjuk egy sorral
                     //majd felfele haladva ugyanezt tesszuk a tobbi mezovel is
-                    this.labirinth[i+1][columnIndex] = field
+                    this.labirinth[i + 1][columnIndex] = field
                 }
             }
         }
         //a korabban elmentett extra mezot betesszuk a legfelso pozicioba
         this.labirinth[1][columnIndex] = extraTile
         //elmentjuk az uj extra mezo poziciojat
-        this.extraTilePosition.row = this.labirinth.length-1
+        this.extraTilePosition.row = this.labirinth.length - 1
         this.extraTilePosition.column = columnIndex
         this.drawLabirinth();
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -244,106 +244,148 @@ class Labirinth {
     moveColumnUp(columnIndex) {
         let extraTile = this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column]
         this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = null
-        for (let i = 1; i < this.labirinth.length-1; i++) {
+        for (let i = 1; i < this.labirinth.length - 1; i++) {
             const row = this.labirinth[i]
-            for (let j = 0; j < columnIndex+1; j++) {
+            for (let j = 0; j < columnIndex + 1; j++) {
                 const field = row[j];
-                if(j === columnIndex){
-                    this.labirinth[i-1][columnIndex] = field
+                if (j === columnIndex) {
+                    this.labirinth[i - 1][columnIndex] = field
                 }
             }
         }
-        this.labirinth[this.labirinth.length-2][columnIndex] = extraTile
+        this.labirinth[this.labirinth.length - 2][columnIndex] = extraTile
         this.extraTilePosition.row = 0
         this.extraTilePosition.column = columnIndex
         this.drawLabirinth();
     }
     moveRowRight(row) {
         let extraTile = this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column]
-        this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = null        
-        for (let i = 1; i < row+1; i++) {
+        this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = null
+        for (let i = 1; i < row + 1; i++) {
             const rowArray = this.labirinth[i];
             if (i === row) {
                 for (let j = (rowArray.length - 2); j > 0; j--) {
-                    this.labirinth[row][j+1] = this.labirinth[row][j]
+                    this.labirinth[row][j + 1] = this.labirinth[row][j]
                 }
             }
         }
         this.labirinth[row][1] = extraTile
         this.extraTilePosition.row = row
-        this.extraTilePosition.column = this.labirinth.length-1
+        this.extraTilePosition.column = this.labirinth.length - 1
         this.drawLabirinth();
     }
     moveRowLeft(row) {
         let extraTile = this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column]
         this.labirinth[this.extraTilePosition.row][this.extraTilePosition.column] = null
-        for (let i = 1; i < row+1; i++) {
+        for (let i = 1; i < row + 1; i++) {
             const rowArray = this.labirinth[i];
             if (i === row) {
-                for (let j = 1; j < rowArray.length-1; j++) {
-                    this.labirinth[row][j-1] = this.labirinth[row][j]
+                for (let j = 1; j < rowArray.length - 1; j++) {
+                    this.labirinth[row][j - 1] = this.labirinth[row][j]
                 }
             }
         }
-        this.labirinth[row][this.labirinth.length-2] = extraTile
+        this.labirinth[row][this.labirinth.length - 2] = extraTile
         this.extraTilePosition.row = row
         this.extraTilePosition.column = 0
         this.drawLabirinth();
     }
 
-    getAvailableMoves(pokemon){
+    getAvailableMoves(pokemon) {
         console.log("[getAvailableMoves] pokemon", pokemon)
         let currentPokemonCoordinates = this.getPokemonCoordinatesByPokemonName(pokemon)
-        let availableMoves = {up: false, right: false, down: false, left: false}
-        if(currentPokemonCoordinates.x > 1 
-            && this.labirinth[currentPokemonCoordinates.x-1][currentPokemonCoordinates.y].south === true
+        console.log("[getAvailableMoves] pokemonposition: ", currentPokemonCoordinates)
+        let availableMoves = { up: false, right: false, down: false, left: false }
+
+        this.preventPokemonFalldown(pokemon, currentPokemonCoordinates)
+
+        if (currentPokemonCoordinates.x > 1
+            && this.labirinth[currentPokemonCoordinates.x - 1][currentPokemonCoordinates.y]?.south === true
             && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].north) availableMoves.up = true
-        if(currentPokemonCoordinates.x < this.labirinth.length-2 
-            && this.labirinth[currentPokemonCoordinates.x+1][currentPokemonCoordinates.y].north === true
+        if (currentPokemonCoordinates.x < this.labirinth.length - 2
+            && this.labirinth[currentPokemonCoordinates.x + 1][currentPokemonCoordinates.y]?.north === true
             && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].south) availableMoves.down = true
-        if(currentPokemonCoordinates.y > 1 
-            && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y-1].east === true
+        if (currentPokemonCoordinates.y > 1
+            && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y - 1]?.east === true
             && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].west) availableMoves.left = true
-        if(currentPokemonCoordinates.y < this.labirinth.length-2 
-            && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y+1].west === true
+        if (currentPokemonCoordinates.y < this.labirinth.length - 2
+            && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y + 1]?.west === true
             && this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].east) availableMoves.right = true
+        console.log("[getAvailableMoves] the position after the ifs",currentPokemonCoordinates)
+
         return availableMoves
     }
 
-    moveCharacter(pokemon, direction){
+    preventPokemonFalldown(pokemon, currentPokemonCoordinates){
+        //ha a pokemon leesne a pályáról, tegye át a pálya másik oldalára        
+        if (currentPokemonCoordinates.x === 0) {
+            //ha bal oldalon esne le, tegye at jobbra
+            this.removePokemonFromTile(pokemon, this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y])
+            this.placePokemonToTile(pokemon, this.labirinth[this.labirinth.length-2][currentPokemonCoordinates.y])
+        }
+        if (currentPokemonCoordinates.x === this.labirinth.length - 1) {
+            //ha jobb oldalrol esne le tegye at balra
+            this.removePokemonFromTile(pokemon, this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y])
+            this.placePokemonToTile(pokemon, this.labirinth[1][currentPokemonCoordinates.y])
+        }
+        if (currentPokemonCoordinates.y === 0) {
+            //ha föntről esne le tegye le lentre
+            this.removePokemonFromTile(pokemon, this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y])
+            this.placePokemonToTile(pokemon, this.labirinth[currentPokemonCoordinates.x][this.labirinth.length-2])
+        }
+        if (currentPokemonCoordinates.y === this.labirinth.length - 1){
+            //ha lentről esne le, tegye fel fentre
+            this.removePokemonFromTile(pokemon, this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y])            
+            this.placePokemonToTile(pokemon, this.labirinth[currentPokemonCoordinates.x][1])
+        }
+    }
+
+    removePokemonFromTile(pokemonName, tile){
+        console.log('[removePokemonFromTile] tile',tile)
+        tile.pokemons = tile.pokemons.filter(pokemon => pokemon !== pokemonName)
+    }
+
+    placePokemonToTile(pokemonName, tile){
+        tile.pokemons.push(pokemonName)
+    }
+
+    moveCharacter(pokemon, direction) {
         let currentPokemonCoordinates = this.getPokemonCoordinatesByPokemonName(pokemon)
         this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].pokemons = this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y].pokemons.filter(poke => poke !== pokemon)
-        switch(direction){
-            case "up": {                
-                this.labirinth[currentPokemonCoordinates.x-1][currentPokemonCoordinates.y].pokemons.push(pokemon)
+        switch (direction) {
+            case "up": {
+                this.labirinth[currentPokemonCoordinates.x - 1][currentPokemonCoordinates.y].pokemons.push(pokemon)
                 break
             }
             case "down": {
-                this.labirinth[currentPokemonCoordinates.x+1][currentPokemonCoordinates.y].pokemons.push(pokemon)
+                this.labirinth[currentPokemonCoordinates.x + 1][currentPokemonCoordinates.y].pokemons.push(pokemon)
                 break
             }
-            case "right": {                
-                this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y+1].pokemons.push(pokemon)
+            case "right": {
+                this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y + 1].pokemons.push(pokemon)
                 break
             }
             default: {
-                this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y-1].pokemons.push(pokemon)                
+                this.labirinth[currentPokemonCoordinates.x][currentPokemonCoordinates.y - 1].pokemons.push(pokemon)
             }
         }
     }
 
-    getPokemonCoordinatesByPokemonName(pokemonName){    
-        let currentPokemonCoordinates = {x: 0, y: 0}
-        for (let i = 0; i < this.labirinth.length-1; i++) {
+    getPokemonCoordinatesByPokemonName(pokemonName) {
+        let currentPokemonCoordinates;
+        //  = { x: 0, y: 0 }
+        for (let i = 0; i < this.labirinth.length; i++) {
             const row = this.labirinth[i];
-            for (let j = 0; j < row.length-1; j++) {
+            for (let j = 0; j < row.length; j++) {
                 const tile = row[j];
-                if(tile?.pokemons.includes(pokemonName)){
-                    currentPokemonCoordinates = {x: i, y:j}
+                if (tile?.pokemons.includes(pokemonName)) {
+                    return { x: i, y: j }
                 }
             }
         }
-        return currentPokemonCoordinates
+        return { x : 0, y: 0}
+        // if (currentPokemonCoordinates === undefined) currentPokemonCoordinates = 
+        // return currentPokemonCoordinates
     }
 
 }

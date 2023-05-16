@@ -25,6 +25,7 @@ export class RoomComponent {
   whosTurn: string = '';
   availableMoves: {up: boolean, right: boolean, down: boolean, left: boolean} = {up: false, right: false, down: false, left: false};
   playersPokemons: any[] = [];
+  catch = false;
 
   constructor(private route: ActivatedRoute, private router: Router, public socketioService: SocketioService) { }
   
@@ -61,6 +62,11 @@ export class RoomComponent {
       if(tile?.pokemons.includes(pokemon)) value = true
     });    
     return value
+  }
+
+  public catchPokemon():void{
+    this.catch = false
+    this.socketioService.catchPokemon(this.collectablePokemons[0])
   }
 
   ngOnInit() {
@@ -136,7 +142,18 @@ export class RoomComponent {
       this.availableMoves = availableMoves
     })
 
-    this.socketioService.getCatch().subscribe((test) => console.log("test", test))
+    this.socketioService.getCatch().subscribe(() => {
+      this.catch = true
+    })
+
+    this.socketioService.getPokemonCaught()
+      .subscribe((pokemonCaught:{playerId: string, pokemon: string}) => {
+        let thisPlayer = this.players.find(player => player.id == pokemonCaught.playerId)
+        thisPlayer.pokemonsCaught.push(pokemonCaught.pokemon)
+        thisPlayer.collectablePokemons.filter(pokemonCaught.pokemon)
+      });
+    
+    
 
 }
 ngOnDestroy(){

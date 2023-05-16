@@ -150,6 +150,15 @@ export class SocketioService {
     })
   }
 
+  getPokemonCaught(){
+    type pokemonCaughtShema = {playerId : string, pokemon: string};
+    return new Observable((observer: Observer<pokemonCaughtShema>) => {
+      this.socket.on('pokemon caught', (pokemonCaught:pokemonCaughtShema) => {
+        observer.next(pokemonCaught)
+      })
+    })
+  }
+
   public createRoom(nickname: string) {
     this.socket.emit('createRoom', nickname)
   }
@@ -195,8 +204,8 @@ export class SocketioService {
     this.socket.emit('end turn')
   }
 
-  catchPokemon(){
-    this.socket.emit('catch pokemon')
+  catchPokemon(pokemon:string){
+    this.socket.emit('catch pokemon', pokemon)
     this.endTurn()
   }
 

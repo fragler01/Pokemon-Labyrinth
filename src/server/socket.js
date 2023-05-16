@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
         if (data.roomid != '') {
             if (rooms.find(room => room.id == data.roomid)) {
                 socket.join(data.roomid)
-                rooms.find(room => room.id == data.roomid).players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, pokemonsToCollect: [] })
+                rooms.find(room => room.id == data.roomid).players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, pokemonsToCollect: [], pokemonsCaught : [] })
                 console.log(data.nickname, " joined ", rooms.find(room => room.id == data.roomid))
                 io.to(data.roomid).emit('joined', { room: rooms.find(room => room.id == data.roomid), playerid: socket.id })
             } else {
@@ -202,6 +202,14 @@ io.on('connection', (socket) => {
     socket.on('end turn', () => {
         let thisRoom = rooms.find(room => room.players.find(player => player.id == socket.id))
         nextPlayersTurn(thisRoom, socket.id)
+    })
+
+    socket.on('catch pokemon', (pokemon) => {        
+        let thisPlayer = thisRoom.players.find(player => player.id == socket.id)
+        let thisRoom = rooms.find(room => room.players.includes(thisPlayer))
+        thisPlayer.caughtPokemons.push(pokemon)
+        thisPlayer.pokemonsToCollect = thisPlayer.pokemonsToCollect.filter(poke => poke === pokemon)
+        io.to(thisRoom.id).emit('pokemon caught', {playerId: socket.id, pokemon: pokemon})
     })
 });
 

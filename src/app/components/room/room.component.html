@@ -14,6 +14,7 @@
             {{player.chosenPokemon}}</li>
     </ul>
     <button *ngIf="thisPlayer?.roomCreator && gameState === 'lobby'" (click)="socketioService.startGame( room ? room : '' ) ">Indítás </button>
+    <button *ngIf="catch" (click)="catchPokemon()">🎱</button>
     <button *ngIf="mayIMoveMyCharacter()" (click)="socketioService.endTurn()">🛑</button>
     <button *ngIf="mayIMoveTheTiles()" (click)="socketioService.rotateExtraTile('CCW')">↪️</button>
     <button *ngIf="mayIMoveTheTiles()" (click)="socketioService.rotateExtraTile('CW')">↩️</button>
