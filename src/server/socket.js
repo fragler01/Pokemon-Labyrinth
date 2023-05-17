@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
         } else {
             let roomid = uuid()
             rooms.push({ id: roomid, players: [], labirinth: new Labirinth() })
-            rooms.find(room => room.id == roomid).players.push({ id: socket.id, nickname: nickname, roomCreator: true, pokemonsToCollect: [] })
+            rooms.find(room => room.id == roomid).players.push({ id: socket.id, nickname: nickname, roomCreator: true, pokemonsToCollect: [], caughtPokemons : [] })
             socket.join(roomid)
             io.to(roomid).emit('joined', { room: rooms.find(room => room.id == roomid), playerid: socket.id })
             console.log(`new room created with the id ${roomid}, new roomlist: `, rooms)
@@ -54,7 +54,9 @@ io.on('connection', (socket) => {
         if (data.roomid != '') {
             if (rooms.find(room => room.id == data.roomid)) {
                 socket.join(data.roomid)
-                rooms.find(room => room.id == data.roomid).players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, pokemonsToCollect: [], pokemonsCaught : [] })
+                let room = rooms.find(room => room.id == data.roomid)                
+                room.players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, pokemonsToCollect: [], caughtPokemons: [] })
+                console.log("[room.players]", room.players)
                 console.log(data.nickname, " joined ", rooms.find(room => room.id == data.roomid))
                 io.to(data.roomid).emit('joined', { room: rooms.find(room => room.id == data.roomid), playerid: socket.id })
             } else {
@@ -205,8 +207,8 @@ io.on('connection', (socket) => {
     })
 
     socket.on('catch pokemon', (pokemon) => {        
+        let thisRoom = rooms.find(room => room.players.find(player => player.id == socket.id))
         let thisPlayer = thisRoom.players.find(player => player.id == socket.id)
-        let thisRoom = rooms.find(room => room.players.includes(thisPlayer))
         thisPlayer.caughtPokemons.push(pokemon)
         thisPlayer.pokemonsToCollect = thisPlayer.pokemonsToCollect.filter(poke => poke === pokemon)
         io.to(thisRoom.id).emit('pokemon caught', {playerId: socket.id, pokemon: pokemon})
@@ -215,10 +217,13 @@ io.on('connection', (socket) => {
 
 nextPlayersTurn = (room, currentPlayerId) => {
     let players = room.players
-    let currentPlayerIndex = players.findIndex(player => player.id = currentPlayerId)
+    let currentPlayerIndex = players.findIndex(player => player.id === currentPlayerId)
     let idToSend;
-    if (currentPlayerIndex < players.length - 1) idToSend = players[currentPlayerIndex + 1].id
-    else idToSend = players[0].id
+    console.log('[players]', players)
+    console.log("[players length, playerindex]", players.length, currentPlayerIndex)
+    if (currentPlayerIndex < players.length-1) idToSend = players[currentPlayerIndex + 1].id 
+    else idToSend = players[0].id 
+    console.log('[sending the playerindex]', idToSend)
     io.to(room.id).emit('whos turn', idToSend)
     room.gameState = 'tile moving'
     io.to(room.id).emit('new phase', room.gameState)
