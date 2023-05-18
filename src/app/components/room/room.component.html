@@ -11,7 +11,7 @@
     <ul>
         <li *ngFor="let player of players"
             [class.bold]="player.id === whosTurn">{{player.id}}, {{player.nickname}}, {{player.roomCreator ? "👑" : ""}},
-            {{player.chosenPokemon}}</li>
+            {{player.chosenPokemon}} <span *ngFor="let collectedPokemon of player.caughtPokemons">{{collectedPokemon}}, </span></li>
     </ul>
     <button *ngIf="thisPlayer?.roomCreator && gameState === 'lobby'" (click)="socketioService.startGame( room ? room : '' ) ">Indítás </button>
     <button *ngIf="catch" (click)="catchPokemon()">🎱</button>
@@ -30,7 +30,11 @@
                 [class]="{north: field.north, east: field.east, south: field.south, west: field.west}">                
                 <img *ngIf="field.pokemon !== ''" [attr.src]="'./assets/img/'+field.pokemon+'.png'" alt="" width="50px" height="50px">
             </td> -->
-            <td *ngFor="let field of row; let j = index" [class]="{myCharacter : field?.pokemons.includes(myPokemon), playerCharacter : isPlayerOnThisTile(field)}">                
+            <td *ngFor="let field of row; let j = index" 
+                [class]="{myCharacter : field?.pokemons.includes(myPokemon), 
+                    playerCharacter : isPlayerOnThisTile(field), 
+                    extraTile: extraTilePosition.row === i && extraTilePosition.column === j,
+                    outline: i < labirinth.length-1 && i > 0 && j > 0 && j < labirinth.length-1}">                
                 <button *ngIf="mayIMoveTheTiles() && !field && i === 0 && (j === 2 || j === 4 || j === 6) "
                     (click)="socketioService.moveColumnDown(j) ">👇</button>
                 <button *ngIf="mayIMoveTheTiles() && !field && i === labirinth.length-1 && (j === 2 || j === 4 || j === 6)"

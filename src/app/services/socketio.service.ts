@@ -103,6 +103,14 @@ export class SocketioService {
     })
   }
 
+  getIChoseYou(){
+    return new Observable((observer: Observer<any>) => {
+      this.socket.on('i chose you', (players: any) => {
+        observer.next(players)
+      })
+    })
+  }
+  
   getRefreshPlayers(){
     return new Observable((observer: Observer<any>) => {
       this.socket.on('refresh players', (players: any) => {
@@ -155,6 +163,15 @@ export class SocketioService {
     return new Observable((observer: Observer<pokemonCaughtShema>) => {
       this.socket.on('pokemon caught', (pokemonCaught:pokemonCaughtShema) => {
         observer.next(pokemonCaught)
+      })
+    })
+  }
+
+  getExtraTilePosition(){
+    type extraTile = { row: number, column: number};
+    return new Observable((observer: Observer<extraTile>) => {
+      this.socket.on('extra tile position', (extraTile:extraTile)=> {
+        observer.next(extraTile)
       })
     })
   }

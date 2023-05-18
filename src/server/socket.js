@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
         } else {
             let roomid = uuid()
             rooms.push({ id: roomid, players: [], labirinth: new Labirinth() })
-            rooms.find(room => room.id == roomid).players.push({ id: socket.id, nickname: nickname, roomCreator: true, pokemonsToCollect: [], caughtPokemons : [] })
+            rooms.find(room => room.id == roomid).players.push({ id: socket.id, nickname: nickname, roomCreator: true, collactablePokemons: [], caughtPokemons : [] })
             socket.join(roomid)
             io.to(roomid).emit('joined', { room: rooms.find(room => room.id == roomid), playerid: socket.id })
             console.log(`new room created with the id ${roomid}, new roomlist: `, rooms)
@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
             if (rooms.find(room => room.id == data.roomid)) {
                 socket.join(data.roomid)
                 let room = rooms.find(room => room.id == data.roomid)                
-                room.players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, pokemonsToCollect: [], caughtPokemons: [] })
+                room.players.push({ id: socket.id, nickname: data.nickname, roomCreator: false, collactablePokemons: [], caughtPokemons: [] })
                 console.log("[room.players]", room.players)
                 console.log(data.nickname, " joined ", rooms.find(room => room.id == data.roomid))
                 io.to(data.roomid).emit('joined', { room: rooms.find(room => room.id == data.roomid), playerid: socket.id })
@@ -106,6 +106,7 @@ io.on('connection', (socket) => {
         io.to(thisRoom.id).emit('whos turn', thisRoom.players[0].id)
         io.to(thisRoom.id).emit('game started', thisRoom)
         io.to(thisRoom.id).emit('new phase', thisRoom.gameState)
+        // io.to(thisRoom.id).emit('extra tile position', thisRoom.labirinth.extraTilePosition)
     })
 
     socket.on('i choose you', (pokemon) => {
@@ -116,7 +117,7 @@ io.on('connection', (socket) => {
         let collectablePokemons = thisRoom.labirinth.collactablePokemons
 
         thisPlayer.chosenPokemon = pokemon
-        io.to(thisRoom.id).emit('refresh players', { players: thisRoom.players, sendingPlayer: socket.id, chosenPokemon: thisPlayer.chosenPokemon })
+        io.to(thisRoom.id).emit('i chose you', { players: thisRoom.players, sendingPlayer: socket.id, chosenPokemon: thisPlayer.chosenPokemon })
         thisRoom.choosablePokemons = thisRoom.choosablePokemons.filter(poke => poke != pokemon)
 
         placePlayerCharacterOnMap(thisPlayerIndex, thisRoom.labirinth.labirinth, pokemon)
@@ -173,6 +174,7 @@ io.on('connection', (socket) => {
         io.to(room.id).emit('refresh labirinth', room.labirinth.labirinth)
         io.to(room.id).emit('new phase', "move character")
         io.to(room.id).emit('available moves', room.labirinth.getAvailableMoves(pokemon))
+        io.to(room.id).emit('extra tile position', room.labirinth.extraTilePosition)
     }
 
     socket.on('move character', (direction) => {
@@ -207,11 +209,19 @@ io.on('connection', (socket) => {
     })
 
     socket.on('catch pokemon', (pokemon) => {        
+        console.log('[catch pokemon] pokemon', pokemon)
         let thisRoom = rooms.find(room => room.players.find(player => player.id == socket.id))
         let thisPlayer = thisRoom.players.find(player => player.id == socket.id)
+        let playersPosition = thisRoom.labirinth.getPokemonCoordinatesByPokemonName(pokemon)
+        let tileWithPokemon = thisRoom.labirinth.labirinth[playersPosition.x][playersPosition.y]
+        console.log('tilewithpokemon' ,tileWithPokemon)
+        tileWithPokemon.pokemons.filter(poke => poke !== pokemon)
         thisPlayer.caughtPokemons.push(pokemon)
-        thisPlayer.pokemonsToCollect = thisPlayer.pokemonsToCollect.filter(poke => poke === pokemon)
-        io.to(thisRoom.id).emit('pokemon caught', {playerId: socket.id, pokemon: pokemon})
+        console.log("[Catch Pokemon]thisPlayer",thisPlayer)
+        thisPlayer.collactablePokemons = thisPlayer.collactablePokemons.filter(poke => poke !== pokemon)
+        io.to(thisRoom.id).emit('refresh labirinth', thisRoom.labirinth.labirinth)
+        // io.to(thisRoom.id).emit('pokemon caught', {playerId: socket.id, pokemon: pokemon})
+        io.to(thisRoom.id).emit('refresh players', thisRoom.players)
     })
 });
 

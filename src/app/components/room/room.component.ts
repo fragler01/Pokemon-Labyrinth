@@ -20,6 +20,7 @@ export class RoomComponent {
   collectablePokemons: string[] = [];
   collectedPokemons: string[] = [];
   extraTile: any;
+  extraTilePosition: {row: number, column: number} = {row: 0, column: 0};
   gameState: string = 'lobby';
   isRoomAlive: any;
   whosTurn: string = '';
@@ -72,9 +73,9 @@ export class RoomComponent {
   ngOnInit() {
     const roomid = this.route.snapshot.paramMap.get('roomid');
     console.log(roomid)
-    this.isRoomAlive = setInterval(() => {
-      this.socketioService.roomExists(roomid?roomid:"")            
-    },5000);
+    // this.isRoomAlive = setInterval(() => {
+    //   this.socketioService.roomExists(roomid?roomid:"")            
+    // },5000);
 
     const player = this.route.snapshot.paramMap.get('playerid');
     this.socketioService.socket.emit('arrived to room', { playerid: player, roomid: roomid })
@@ -118,7 +119,7 @@ export class RoomComponent {
       this.labirinth = labirinth      
     })
 
-    this.socketioService.getRefreshPlayers().subscribe((object: any) => {
+    this.socketioService.getIChoseYou().subscribe((object: any) => {
       this.players = object.players
       this.players.find(player => player.id == object.sendingPlayer).chosenPokemon = object.chosenPokemon
       this.playersPokemons.push(object.chosenPokemon)
@@ -146,17 +147,23 @@ export class RoomComponent {
       this.catch = true
     })
 
-    this.socketioService.getPokemonCaught()
-      .subscribe((pokemonCaught:{playerId: string, pokemon: string}) => {
-        let thisPlayer = this.players.find(player => player.id == pokemonCaught.playerId)
-        thisPlayer.pokemonsCaught.push(pokemonCaught.pokemon)
-        thisPlayer.collectablePokemons.filter(pokemonCaught.pokemon)
+    this.socketioService.getRefreshPlayers().subscribe((players: any) => {
+      this.players = players
+      console.log('this.players',this.players)
+      this.thisPlayer = players.find((player:any) => player.id === this.thisPlayer.id)
+      console.log('this player', this.thisPlayer)
+      this.collectablePokemons = this.thisPlayer.collactablePokemons
+      console.log('this.collactablePokemons')
+      this.collectedPokemons = this.thisPlayer.caughtPokemons
       });
     
+    this.socketioService.getExtraTilePosition().subscribe((extraTile:{row: number, column: number})=> {
+      this.extraTilePosition = extraTile
+    })
     
 
 }
 ngOnDestroy(){
-  clearInterval(this.isRoomAlive)
+  // clearInterval(this.isRoomAlive)
 }
 }

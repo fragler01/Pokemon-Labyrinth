@@ -14,9 +14,9 @@ export class AppComponent {
 
   ngOnInit(){
     this.socketService.setupSocketConnection();
-    this.socketService.getMessage().subscribe((message:string)=>{
-      console.log(message)
-    })
+    // this.socketService.getMessage().subscribe((message:string)=>{
+    //   console.log(message)
+    // })
   }
   ngOnDestroy(){
     this.socketService.disconnect();
